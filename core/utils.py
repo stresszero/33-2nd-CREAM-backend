@@ -39,10 +39,10 @@ class KakaoLoginAPI:
             "redirect_uri": settings.KAKAO_REDIRECT_URI,
             "code"        : code,
         }
-        
+
         response = requests.post(self.kakao_token_uri, data=body, timeout=3)
 
-        if not response.status_code == 200:
+        if response.status_code != 200:
             return JsonResponse({'message': 'INVALID_RESPONSE'}, status=response.status_code)
 
         self._access_token = response.json()["access_token"]
@@ -54,8 +54,8 @@ class KakaoLoginAPI:
                 "Authorization": f"Bearer {self._access_token}"
             }, timeout=3
         )
-        
-        if not response.status_code == 200:
+
+        if response.status_code != 200:
             return JsonResponse({'message': 'INVALID_RESPONSE'}, status=response.status_code)
-        
+
         return response.json()
